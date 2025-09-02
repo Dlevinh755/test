@@ -52,12 +52,16 @@ class QATCForQuestionAnswering(PreTrainedModel):
     def __init__(self, config):
         super(QATCForQuestionAnswering, self).__init__(config)
         self.config = config
-        if "deberta" in getattr(self.config, "model_name", ""):
-            self.model = AutoModel.from_pretrained(self.config.model_name) 
-        elif "info" in self.config.model_name:
-            self.model = XLMRobertaModel.from_pretrained(self.config.model_name)
-        else:
-            self.model = AutoModelForSequenceClassification.from_pretrained(self.config.model_name)
+        model_name = str(getattr(self.config, "model_name", ""))
+    if "deberta" in model_name:
+        self.model = AutoModel.from_pretrained(model_name)
+    elif "info" in model_name:
+        self.model = XLMRobertaModel.from_pretrained(model_name)
+    else:
+        try:
+            self.model = AutoModelForSequenceClassification.from_pretrained(model_name)
+        except Exception:
+            self.model = AutoModel.from_pretrained(model_name)
 
         if getattr(self.config, "freeze_text_encoder", False):
             print("Freezing text encoder weights")
