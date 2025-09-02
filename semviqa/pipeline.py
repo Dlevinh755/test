@@ -46,8 +46,6 @@ class SemViQAPipeline:
     def process_batch(self, data_path, output_path, return_evidence_only=False):
         data = pd.read_csv(data_path) if "csv" in data_path else pd.read_json(data_path).T
         print(f'Load data: {len(data)} samples')
-        
-        data["id"] = data.index
         test_data = load_data(data)
         
         results = []
@@ -56,7 +54,7 @@ class SemViQAPipeline:
 
         pd.DataFrame(results).to_csv(output_path)
 
-        print(pd.DataFrame(results).T.predict_label.value_counts() if not return_evidence_only else "Evidence extraction completed.")
+        print(pd.DataFrame(results).predict_label.value_counts() if not return_evidence_only else "Evidence extraction completed.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
