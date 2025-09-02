@@ -54,7 +54,7 @@ class SemViQAPipeline:
         for idx, item in tqdm(test_data.items()):
             results.append(self.predict(item[0]['id'],item[0]['claim'], item[0]['context'], return_evidence_only))
 
-        pd.DataFrame(results).to_csv(output_path, orient="records", lines=True)
+        pd.DataFrame(results).to_csv(output_path)
 
         print(pd.DataFrame(results).T.predict_label.value_counts() if not return_evidence_only else "Evidence extraction completed.")
 
