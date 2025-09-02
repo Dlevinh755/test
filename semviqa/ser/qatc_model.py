@@ -1,4 +1,4 @@
-from transformers import PreTrainedModel, AutoModel, PretrainedConfig, RobertaModel, XLMRobertaModel
+from transformers import PreTrainedModel, AutoModel, PretrainedConfig, RobertaModel, XLMRobertaModel, AutoModelForSequenceClassification
 from transformers.modeling_outputs import QuestionAnsweringModelOutput
 from dataclasses import dataclass
 from typing import Optional, Tuple
@@ -57,7 +57,7 @@ class QATCForQuestionAnswering(PreTrainedModel):
         elif "info" in self.config.model_name:
             self.model = XLMRobertaModel.from_pretrained(self.config.model_name)
         else:
-            self.model = RobertaModel.from_pretrained(self.config.model_name)
+            self.model = AutoModelForSequenceClassification.from_pretrained(self.config.model_name)
 
         if getattr(self.config, "freeze_text_encoder", False):
             print("Freezing text encoder weights")
