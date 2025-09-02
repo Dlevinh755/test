@@ -106,20 +106,20 @@ def load_data(data):
             data_new[data.id[i]] = [
                 {
                     'id': data.id[i],
-                    'context': data.context[i],
-                    'claim': data.prompt[i],
-                    'response': data.response[i] if 'response' in data.columns else None,
-                    'label': data.label[i] if 'label' in data.columns else None
+                    'context': data["context"][i],
+                    'claim': data["prompt"][i],
+                    'response': data["response"][i] if 'response' in data.columns else None,
+                    'label': data["label"][i] if 'label' in data.columns else None
                 }
             ]
         else:
             data_new[data.id[i]].append(
                 {
                     'id': data.id[i],
-                    'context': data.context[i],
-                    'claim': data.prompt[i],
-                    'response': data.response[i] if 'response' in data.columns else None,
-                    'label': data.label[i] if 'label' in data.columns else None
+                    'context': data["context"][i],
+                    'claim': data["prompt"][i],
+                    'response': data["response"][i] if 'response' in data.columns else None,
+                    'label': data["label"][i] if 'label' in data.columns else None
                 }
             )
     return data_new
