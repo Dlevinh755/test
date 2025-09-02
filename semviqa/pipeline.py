@@ -25,8 +25,8 @@ class SemViQAPipeline:
         self.tokenizer_classify = AutoTokenizer.from_pretrained(model_tc)
         self.model_tc = ClaimModelForClassification.from_pretrained(model_tc)
         self.model_bc = ClaimModelForClassification.from_pretrained(model_bc, num_labels=2)
-        
-    def predict(self, claim, context, return_evidence_only=False):
+
+    def predict(self, id, claim, context, return_evidence_only=False):
         evidence = extract_evidence_tfidf_qatc(
             claim, context, self.model_evidence_QA, self.tokenizer_QA, self.device, confidence_threshold=self.thres_evidence, length_ratio_threshold=self.length_ratio_threshold, is_qatc_faster=self.is_qatc_faster
         )
@@ -39,9 +39,9 @@ class SemViQAPipeline:
         
         if pred_tc != 0:
             prob2class, pred_bc = classify_claim(claim, evidence, self.model_bc, self.tokenizer_classify, self.device)
-            verdict = "No" if pred_bc == 0 else "Intrinsic" if prob2class > prob3class else ["NEI", "SUPPORTED", "REFUTED"][pred_tc]
+            verdict = "No" if pred_bc == 0 else "Intrinsic" if prob2class > prob3class else ["Extrinsic", "No", "Intrinsic"][pred_tc]
         
-        return {"verdict": verdict, "evidence": evidence}
+        return {"id": id, "predict_label": verdict, "evidence": evidence}
 
     def process_batch(self, data_path, output_path, return_evidence_only=False):
         data = pd.read_csv(data_path) if "csv" in data_path else pd.read_json(data_path).T
@@ -50,14 +50,13 @@ class SemViQAPipeline:
         data["id"] = data.index
         test_data = load_data(data)
         
-        results = {}
+        results = []
         for idx, item in tqdm(test_data.items()):
-            results[str(idx)] = self.predict(item[0]['claim'], item[0]['context'], return_evidence_only)
-        
-        with open(output_path, "w", encoding="utf-8") as json_file:
-            json.dump(results, json_file, ensure_ascii=False, indent=4)
-        
-        print(pd.DataFrame(results).T.verdict.value_counts() if not return_evidence_only else "Evidence extraction completed.")
+            results.append(self.predict(item[0]['id'],item[0]['claim'], item[0]['context'], return_evidence_only))
+
+        pd.DataFrame(results).to_csv(output_path, orient="records", lines=True)
+
+        print(pd.DataFrame(results).T.predict_label.value_counts() if not return_evidence_only else "Evidence extraction completed.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
