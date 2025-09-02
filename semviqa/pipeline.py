@@ -5,11 +5,11 @@ import pandas as pd
 import json
 import argparse
 
-from .data_processing.pipline import process_data, load_data
-from .ser.ser_eval import extract_evidence_tfidf_qatc
-from .ser.qatc_model import QATCForQuestionAnswering
-from .tvc.tvc_eval import classify_claim
-from .tvc.model import ClaimModelForClassification
+from semviqa.data_processing.pipline import process_data, load_data
+from semviqa.ser.ser_eval import extract_evidence_tfidf_qatc
+from semviqa.ser.qatc_model import QATCForQuestionAnswering
+from semviqa.tvc.tvc_eval import classify_claim
+from semviqa.tvc.model import ClaimModelForClassification
 
 class SemViQAPipeline:
     def __init__(self, model_evidence_QA, model_bc, model_tc, thres_evidence=0.5, length_ratio_threshold=0.6, is_qatc_faster=False, device=None):
