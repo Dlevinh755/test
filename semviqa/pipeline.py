@@ -39,7 +39,7 @@ class SemViQAPipeline:
         
         if pred_tc != 0:
             prob2class, pred_bc = classify_claim(claim, evidence, self.model_bc, self.tokenizer_classify, self.device)
-            verdict = "No" if pred_bc == 0 else "Intrinsic" if prob2class > prob3class else ["Extrinsic", "No", "Intrinsic"][pred_tc]
+            verdict = "no" if pred_bc == 0 else "intrinsic" if prob2class > prob3class else ["extrinsic", "no", "intrinsic"][pred_tc]
         
         return {"id": id, "predict_label": verdict, "evidence": evidence}
 
