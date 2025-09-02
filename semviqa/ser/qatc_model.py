@@ -52,7 +52,7 @@ class QATCForQuestionAnswering(PreTrainedModel):
     def __init__(self, config):
         super(QATCForQuestionAnswering, self).__init__(config)
         self.config = config
-        if "deberta" in self.config.model_name:
+        if "deberta" in getattr(self.config, "model_name", ""):
             self.model = AutoModel.from_pretrained(self.config.model_name) 
         elif "info" in self.config.model_name:
             self.model = XLMRobertaModel.from_pretrained(self.config.model_name)
