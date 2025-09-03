@@ -34,7 +34,7 @@ class SemViQAPipeline:
         if return_evidence_only:
             return {"evidence": evidence}
         
-        verdict = "Extrinsic"
+        verdict = "extrinsic"
         prob3class, pred_tc = classify_claim(claim, evidence, self.model_tc, self.tokenizer_classify, self.device)
         
         if pred_tc != 0:
